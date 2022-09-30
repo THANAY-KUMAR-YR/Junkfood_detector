@@ -144,13 +144,13 @@ async function predict() {
   let Fat = Calcium.nextElementSibling;
   let Carbohydrate = Fat.nextElementSibling;
   let Vitamin = Carbohydrate.nextElementSibling;
-  food.innerHTML         = `Food          : loading`;
-  name.innerHTML         = `Name          : loading`;
-  Protein.innerHTML      = `Protein       : loading`;
-  Calcium.innerHTML      = `Calcium       : loading`;
-  Fat.innerHTML          = `Fat           : loading`;
+  food.innerHTML = `Food          : loading`;
+  name.innerHTML = `Name          : loading`;
+  Calcium.innerHTML = `Calcium       : loading`;
+  Fat.innerHTML = `Fat           : loading`;
   Carbohydrate.innerHTML = `Carbohydrate  : loading`;
-  Vitamin.innerHTML      = `Vitamin       : loading`;
+  Vitamin.innerHTML = `Vitamin       : loading`;
+  Protein.innerHTML = `Protein       : loading`;
   if (!modelLoaded) {
     alert("The model must be loaded first");
     return;
@@ -184,13 +184,22 @@ async function predict() {
     let Vitamin = Carbohydrate.nextElementSibling;
     let pr = document.getElementById("alignn").style;
     let pred = await modelfull.predict(ten).data();
-    let j;
-    for (i = 0; i < 100; i++)
+    let j=-1;
+    for (i = 0; i <= 100; i++) {
+      // console.log(dict[i] + ":" + pred[i] + "\n");
       if (pred[i] >= 0.5) {
         j = i;
       }
+    }
+    if(j===-1){
+      for (i = 0; i <= 100; i++) {
+        // console.log(dict[i] + ":" + pred[i] + "\n");
+        if (pred[i] >= 0.1) {
+          j = i;
+        }
+      }
+    }
     pr.fontSize = "medium";
-    // console.log(dict[i] + ":" + pred[i] + "\n");
     fetch("./Nutrition.json")
       .then((response) => response.json())
       .then((json) => {
