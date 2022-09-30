@@ -144,13 +144,13 @@ async function predict() {
   let Fat = Calcium.nextElementSibling;
   let Carbohydrate = Fat.nextElementSibling;
   let Vitamin = Carbohydrate.nextElementSibling;
-  food.innerHTML         = `Food          : ???`;
-  name.innerHTML         = `Name          : ???`;
-  Protein.innerHTML      = `Protein       : ???`;
-  Calcium.innerHTML      = `Calcium       : ???`;
-  Fat.innerHTML          = `Fat           : ???`;
-  Carbohydrate.innerHTML = `Carbohydrate  : ???`;
-  Vitamin.innerHTML      = `Vitamin       : ???`;
+  food.innerHTML         = `Food          : loading`;
+  name.innerHTML         = `Name          : loading`;
+  Protein.innerHTML      = `Protein       : loading`;
+  Calcium.innerHTML      = `Calcium       : loading`;
+  Fat.innerHTML          = `Fat           : loading`;
+  Carbohydrate.innerHTML = `Carbohydrate  : loading`;
+  Vitamin.innerHTML      = `Vitamin       : loading`;
   if (!modelLoaded) {
     alert("The model must be loaded first");
     return;
