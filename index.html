@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Food detector</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="box">
+        <div id="card">
+          <div id="left">
+            <img src="./food.jpg" id="image" alt="logo" />
+          </div>
+          <div id="right">
+            <div id="top">
+              <div>
+                <input
+                  type="file"
+                  name="image-upload"
+                  id="input"
+                  accept="image/*"
+                  onchange="imageHandler(event)"
+                  onmouseenter="labelhover()"
+                  onmouseleave="label()"
+                />
+                <label htmlFor="input" className="image-upload">
+                  Upload Image
+                </label>
+                <button onclick="predict()">Predict Image</button>
+              </div>
+            </div>
+            <div id="bottom">
+              <pre id="alignn">
+                  <h3 id="food">Food          : ???</h3>
+                  <h3>Name          : ???</h3>
+                  <h3>Protein       : ???</h3>
+                  <h3>Calcium       : ???</h3>
+                  <h3>Fat           : ???</h3>
+                  <h3>Carbohydrate  : ???</h3>
+                  <h3>Vitamin       : ???</h3>
+                </pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="target.js"></script>
+  </body>
+</html>
