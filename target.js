@@ -175,23 +175,16 @@ async function predict() {
   let prediction = await model.predict(tensor).data();
   // console.log(prediction);
   if (prediction[0] === 1) {
-    let food = document.getElementById("food");
-    let name = food.nextElementSibling;
-    let Protein = name.nextElementSibling;
-    let Calcium = Protein.nextElementSibling;
-    let Fat = Calcium.nextElementSibling;
-    let Carbohydrate = Fat.nextElementSibling;
-    let Vitamin = Carbohydrate.nextElementSibling;
     let pr = document.getElementById("alignn").style;
     let pred = await modelfull.predict(ten).data();
-    let j=-1;
+    let j = -1;
     for (i = 0; i <= 100; i++) {
       // console.log(dict[i] + ":" + pred[i] + "\n");
       if (pred[i] >= 0.5) {
         j = i;
       }
     }
-    if(j===-1){
+    if (j === -1) {
       for (i = 0; i <= 100; i++) {
         // console.log(dict[i] + ":" + pred[i] + "\n");
         if (pred[i] >= 0.1) {
@@ -219,7 +212,13 @@ async function predict() {
       });
   } else {
     let food = document.getElementById("food");
-    food.innerHTML = "Food           : NO ";
+    food.innerHTML = "Food          : NO ";
+    name.innerHTML = `Name          : NA`;
+    Calcium.innerHTML = `Calcium       : NA`;
+    Fat.innerHTML = `Fat           : NA`;
+    Carbohydrate.innerHTML = `Carbohydrate  : NA`;
+    Vitamin.innerHTML = `Vitamin       : NA`;
+    Protein.innerHTML = `Protein       : NA`;
   }
   imageLoaded = false;
 }
