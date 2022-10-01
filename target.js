@@ -21,8 +21,8 @@ function resolve(voices, message) {
   utter.voice = voices[4];
   utter.text = message;
   utter.rate = 1;
-  utter.pitch = 1.5;
-  utter.volume = 0.5;
+  utter.pitch = 1;
+  utter.volume = 100.0;
   synth.speak(utter);
 }
 
