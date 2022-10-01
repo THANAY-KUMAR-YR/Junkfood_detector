@@ -1,106 +1,30 @@
-var dict = {
-  0: "apple_pie",
-  1: "baby_back_ribs",
-  2: "baklava",
-  3: "beef_carpaccio",
-  4: "beef_tartare",
-  5: "beet_salad",
-  6: "beignets",
-  7: "bibimbap",
-  8: "bread_pudding",
-  9: "breakfast_burrito",
-  10: "bruschetta",
-  11: "caesar_salad",
-  12: "cannoli",
-  13: "caprese_salad",
-  14: "carrot_cake",
-  15: "ceviche",
-  16: "cheese_plate",
-  17: "cheesecake",
-  18: "chicken_curry",
-  19: "chicken_quesadilla",
-  20: "chicken_wings",
-  21: "chocolate_cake",
-  22: "chocolate_mousse",
-  23: "churros",
-  24: "clam_chowder",
-  25: "club_sandwich",
-  26: "crab_cakes",
-  27: "creme_brulee",
-  28: "croque_madame",
-  29: "cup_cakes",
-  30: "deviled_eggs",
-  31: "donuts",
-  32: "dumplings",
-  33: "edamame",
-  34: "eggs_benedict",
-  35: "escargots",
-  36: "falafel",
-  37: "filet_mignon",
-  38: "fish_and_chips",
-  39: "foie_gras",
-  40: "french_fries",
-  41: "french_onion_soup",
-  42: "french_toast",
-  43: "fried_calamari",
-  44: "fried_rice",
-  45: "frozen_yogurt",
-  46: "garlic_bread",
-  47: "gnocchi",
-  48: "greek_salad",
-  49: "grilled_cheese_sandwich",
-  50: "grilled_salmon",
-  51: "guacamole",
-  52: "gyoza",
-  53: "hamburger",
-  54: "hot_and_sour_soup",
-  55: "hot_dog",
-  56: "huevos_rancheros",
-  57: "hummus",
-  58: "ice_cream",
-  59: "lasagna",
-  60: "lobster_bisque",
-  61: "lobster_roll_sandwich",
-  62: "macaroni_and_cheese",
-  63: "macarons",
-  64: "miso_soup",
-  65: "mussels",
-  66: "nachos",
-  67: "omelette",
-  68: "onion_rings",
-  69: "oysters",
-  70: "pad_thai",
-  71: "paella",
-  72: "pancakes",
-  73: "panna_cotta",
-  74: "peking_duck",
-  75: "pho",
-  76: "pizza",
-  77: "pork_chop",
-  78: "poutine",
-  79: "prime_rib",
-  80: "pulled_pork_sandwich",
-  81: "ramen",
-  82: "ravioli",
-  83: "red_velvet_cake",
-  84: "risotto",
-  85: "samosa",
-  86: "sashimi",
-  87: "scallops",
-  88: "seaweed_salad",
-  89: "shrimp_and_grits",
-  90: "spaghetti_bolognese",
-  91: "spaghetti_carbonara",
-  92: "spring_rolls",
-  93: "steak",
-  94: "strawberry_shortcake",
-  95: "sushi",
-  96: "tacos",
-  97: "takoyaki",
-  98: "tiramisu",
-  99: "tuna_tartare",
-  100: "waffles",
-};
+function utter(message) {
+  let voi = speechSynthesis.getVoices();
+  let gotVoices = false;
+  if (voi.length) {
+    resolve(voi, message);
+  } else {
+    speechSynthesis.onvoiceschanged = () => {
+      if (!gotVoices) {
+        voi = speechSynthesis.getVoices();
+        gotVoices = true;
+        if (voi.length) resolve(voi, message);
+      }
+    };
+  }
+}
+
+function resolve(voices, message) {
+  var synth = window.speechSynthesis;
+  let utter = new SpeechSynthesisUtterance();
+  utter.lang = "en-US";
+  utter.voice = voices[4];
+  utter.text = message;
+  utter.rate = 1.5;
+  utter.pitch = 1.5;
+  utter.volume = 0.5;
+  synth.speak(utter);
+}
 
 function labelhover() {
   let styles = document.querySelector("label").style;
@@ -119,6 +43,11 @@ let modelLoaded = false;
 async function loadmodel() {
   model = await tf.loadLayersModel("bestmodel/model.json");
   modelfull = await tf.loadLayersModel("Junky/model.json");
+  window.onload = ()=>{
+    utter("Welcome to Food detector app.");
+    utter(" ");
+    utter(" The Model has been loaded");
+  }
   console.log("loaded");
   modelLoaded = true;
 }
@@ -135,6 +64,7 @@ function imageHandler(e) {
     }
   };
   reader.readAsDataURL(e.target.files[0]);
+  utter("Image has been uploaded successfully, ready to predict.");
 }
 async function predict() {
   let food = document.getElementById("food");
@@ -152,13 +82,20 @@ async function predict() {
   Vitamin.innerHTML = `Vitamin       : loading`;
   Protein.innerHTML = `Protein       : loading`;
   if (!modelLoaded) {
-    alert("The model must be loaded first");
+    utter("The model must be loaded first");
+    setTimeout(()=>{
+      alert("The model must be loaded first");
+    },100)
     return;
   }
   if (!imageLoaded) {
-    alert("Please select an image first");
+    utter("Please select an image first");
+    setTimeout(()=>{
+      alert("Please select an image first");
+    },100)
     return;
   }
+  utter("Predicting the image, please wait");
   let tensor = tf.browser
     .fromPixels(image, 3)
     .resizeNearestNeighbor([256, 256])
@@ -177,38 +114,28 @@ async function predict() {
   if (prediction[0] === 1) {
     let pr = document.getElementById("alignn").style;
     let pred = await modelfull.predict(ten).data();
-    let j = -1;
+    let i = 0;
+    let large = pred[i];
+    let j = 0;
     for (i = 0; i <= 100; i++) {
-      // console.log(dict[i] + ":" + pred[i] + "\n");
-      if (pred[i] >= 0.5) {
+      if (pred[i] > large) {
         j = i;
-      }
-    }
-    if (j === -1) {
-      for (i = 0; i <= 100; i++) {
-        // console.log(dict[i] + ":" + pred[i] + "\n");
-        if (pred[i] >= 0.1) {
-          j = i;
-        }
+        large = pred[i];
+        // console.log(i + ":" + pred[i] + "\n");
       }
     }
     pr.fontSize = "medium";
     fetch("./Nutrition.json")
       .then((response) => response.json())
       .then((json) => {
-        // let c = json.map(getFullName);
-        // function getFullName(item) {
-        //   if(item.header === j)
-        //     return [item.name,item.protein,item.calcium,item.fat,item.carbohydrates,item.vitamins];
-        // }
-        // console.log(json[j]);
         food.innerHTML = "Food           : YES";
-        name.innerHTML = `Name           : ${dict[j]}`;
+        name.innerHTML = `Name           : ${[json[j].name]}`;
         Protein.innerHTML = `Protein        : ${json[j].protein}`;
         Calcium.innerHTML = `Calcium        : ${json[j].calcium}`;
         Fat.innerHTML = `Fat            : ${json[j].fat}`;
         Carbohydrate.innerHTML = `Carbohydrate   : ${json[j].carbohydrates}`;
         Vitamin.innerHTML = `Vitamin        : ${json[j].vitamins}`;
+        utter(`The uploaded image is of a food called ${[json[j].name]}, having protein of ${json[j].protein} percent, Calcium of ${json[j].calcium} percent, Fat of ${json[j].fat} percent, Carbohydrate of ${json[j].carbohydrates} percent, Vitamin of ${json[j].vitamins} percent. Thank you very much, have a good day!`)
       });
   } else {
     let food = document.getElementById("food");
@@ -219,6 +146,9 @@ async function predict() {
     Carbohydrate.innerHTML = `Carbohydrate  : NA`;
     Vitamin.innerHTML = `Vitamin       : NA`;
     Protein.innerHTML = `Protein       : NA`;
+    utter("The uploaded image is of not a food. Please try another image!")
   }
   imageLoaded = false;
 }
+
+
