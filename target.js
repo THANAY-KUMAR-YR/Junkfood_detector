@@ -20,7 +20,7 @@ function resolve(voices, message) {
   utter.lang = "en-US";
   utter.voice = voices[4];
   utter.text = message;
-  utter.rate = 1.5;
+  utter.rate = 1;
   utter.pitch = 1.5;
   utter.volume = 0.5;
   synth.speak(utter);
@@ -42,7 +42,7 @@ let model;
 let modelLoaded = false;
 async function loadmodel() {
   model = await tf.loadLayersModel("bestmodel/model.json");
-  modelfull = await tf.loadLayersModel("Junky/model.json");
+  modelfull = await tf.loadLayersModel("junk/model.json");
   window.onload = ()=>{
     utter("Welcome to Food detector app.");
     utter(" ");
@@ -98,12 +98,6 @@ async function predict() {
   utter("Predicting the image, please wait");
   let tensor = tf.browser
     .fromPixels(image, 3)
-    .resizeNearestNeighbor([256, 256])
-    .expandDims()
-    .toFloat()
-    .reverse(-1);
-  let ten = tf.browser
-    .fromPixels(image, 3)
     .resizeNearestNeighbor([224, 224])
     .toFloat()
     .sub(tf.scalar(127.5))
@@ -111,9 +105,9 @@ async function predict() {
     .expandDims();
   let prediction = await model.predict(tensor).data();
   // console.log(prediction);
-  if (prediction[0] === 1) {
+  if (prediction[0] > prediction[1]) {
     let pr = document.getElementById("alignn").style;
-    let pred = await modelfull.predict(ten).data();
+    let pred = await modelfull.predict(tensor).data();
     let i = 0;
     let large = pred[i];
     let j = 0;
