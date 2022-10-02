@@ -139,6 +139,7 @@
     font-weight: bolder;
     background-color: #000000;
     transition: all 0.6s ease;
+    color: #fff;
   }
   
   label:hover,
@@ -157,4 +158,27 @@
     justify-content: space-evenly;
     margin: 0 auto;
     font-size: larger;
+  }
+
+  .loading,
+  .loading img,
+  .loading label,
+  .loading button{
+    color: transparent !important;
+    background: linear-gradient(100deg,#000000 20%,#38383895 60%, #000000 80%);
+    animation: loading 0.7s ease-in-out infinite;
+    border: transparent!important;
+  }
+
+  @keyframes loading {
+    0%{
+      background-position: 800px 50%;
+    }
+    50%{
+      background-position: 400px 50%;
+    }
+    100%{
+      background-position: 0px 50%;
+    }
+    
   }
