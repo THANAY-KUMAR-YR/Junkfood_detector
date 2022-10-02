@@ -21,8 +21,8 @@ function resolve(voices, message) {
   utter.voice = voices[4];
   utter.text = message;
   utter.rate = 1;
-  utter.pitch = 1;
-  utter.volume = 100.0;
+  utter.pitch = 1.5;
+  utter.volume = 0.5;
   synth.speak(utter);
 }
 
@@ -49,6 +49,7 @@ async function loadmodel() {
     utter(" The Model has been loaded");
   }
   console.log("loaded");
+  document.getElementById('card').classList.remove('loading');
   modelLoaded = true;
 }
 loadmodel();
